@@ -1,13 +1,25 @@
 
 const callButton = document.getElementById('call_btn');
-var webSocket = new WebSocket("ws://localhost:8000");
+var webSocket = new WebSocket("ws://14.4.229.130:8000");
 var video = document.querySelector('video');
+var photo = document.getElementById('photo');
+var photoContextW, photoContextH;
+var localVideo = document.querySelector('#localVideo');
+var remoteVideo = document.querySelector('#remoteVideo');
+const caller = new RTCPeerConnection();
+const callee = new RTCPeerConnection();
+
+let mySDP;
+caller.createOffer().then((sdp) => {
+    mySDP = sdp;
+});
 
 callButton.onclick = (e) => {
     const input = document.getElementById('callee_ip');
     const requestCallMessage = {
         type: 'video-call',
-        callee: input.value
+        callee: input.value,
+        sdp: mySDP
     };
     webSocket.send(JSON.stringify(requestCallMessage));
 };
@@ -17,14 +29,10 @@ webSocket.onmessage = (e) => {
     grabWebCamVideo();
 };
 
-const caller = new RTCPeerConnection();
-const callee = new RTCPeerConnection();
-caller.createOffer().then((sdp) => {
-    console.log("SDP = ", sdp)
-});
 
 function grabWebCamVideo() {
     console.log('Getting user media (video) ...');
+    console.log('미디어디바이스 = ', navigator.mediaDevices)
     navigator.mediaDevices.getUserMedia({
         audio: false,
         video: true
@@ -38,12 +46,6 @@ function gotStream(stream) {
     console.log('getUserMedia video stream URL:', stream);
     window.stream = stream; // stream available to console
     video.srcObject = stream;
-    video.onloadedmetadata = function() {
-        photo.width = photoContextW = video.videoWidth;
-        photo.height = photoContextH = video.videoHeight;
-        console.log('gotStream with width and height:', photoContextW, photoContextH);
-    };
-    show(snapBtn);
 }
 
 
@@ -117,3 +119,4 @@ callee.onaddstream = handleCalleeOnAddStream;
 function handleCalleeOnAddStream(e){
     remoteVideo.srcObject = e.stream
 }
+
