@@ -44,7 +44,7 @@ wss.on("connection", (ws, req) => {
                 if (hosts.includes(parsedMessage.callee)) {
                     console.log('상대방이 존재 =>', parsedMessage.callee);
                     const elem = clients.get(parsedMessage.callee);
-                    elem.send('너에게 메세지를!');
+                    elem.send('peer에 메세지 전송!');
                 }
         }
 
