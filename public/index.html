@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Realtime communication with WebRTC</title>
+
+    <link type='text/css' rel="stylesheet" href="css/main.css" />
+
+</head>
+
+<body>
+
+<h1>Realtime communication with WebRTC</h1>
+
+<div id="videoCanvas">
+    <video id="camera" autoplay playsinline></video>
+    <canvas id="photo"></canvas>
+</div>
+
+<span>전화걸 호스트 : </span><input id="callee_ip" type="text"/>
+<button id="call_btn">콜</button>
+
+<div id="incoming">
+    <h2>Incoming photos</h2>
+    <div id="trail"></div>
+</div>
+
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+
+</html>
